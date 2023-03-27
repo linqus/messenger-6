@@ -7,9 +7,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
-    /**
-     * @Route("/")
-     */
+
+    #[Route('/')]
     public function homepage()
     {
         return $this->render('main/homepage.html.twig');

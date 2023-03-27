@@ -16,28 +16,39 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
+use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class ImagePostController extends AbstractController
 {
-    /**
-     * @Route("/api/images", methods="GET")
-     */
+
+
+    public function __construct()
+    {
+        
+    }
+
+    #[Route('/api/images', methods:'GET')]
     public function list(ImagePostRepository $repository)
     {
         $posts = $repository->findBy([], ['createdAt' => 'DESC']);
+        //dd($posts);
 
-        return $this->toJson([
-            'items' => $posts
+        $json = $this->toJson([
+            'items' => $posts,
         ]);
+        //dd($json);
+        return $json;
     }
 
-    /**
-     * @Route("/api/images", methods="POST")
-     */
+    #[Route('/api/images', methods:"POST")]
     public function create(Request $request, ValidatorInterface $validator, PhotoFileManager $photoManager, EntityManagerInterface $entityManager, MessageBusInterface $messageBus)
     {
         /** @var UploadedFile $imageFile */
@@ -67,13 +78,12 @@ class ImagePostController extends AbstractController
         ]);
 
         $messageBus->dispatch($envelope);
-
+        
         return $this->toJson($imagePost, 201);
     }
 
-    /**
-     * @Route("/api/images/{id}", methods="DELETE")
-     */
+
+    #[Route("/api/images/{id}", methods:"DELETE")]
     public function delete(ImagePost $imagePost, MessageBusInterface $messageBus)
     {
 
@@ -83,9 +93,8 @@ class ImagePostController extends AbstractController
         return new Response(null, 204);
     }
 
-    /**
-     * @Route("/api/images/{id}", methods="GET", name="get_image_post_item")
-     */
+
+    #[Route("/api/images/{id}", methods:"GET", name:"get_image_post_item")]
     public function getItem(ImagePost $imagePost)
     {
         return $this->toJson($imagePost);
@@ -97,7 +106,23 @@ class ImagePostController extends AbstractController
         if (!isset($context['groups'])) {
             $context['groups'] = ['image:output'];
         }
+        
+        // $context = [
+        //     'url' => 'custom_value',
+        // ];
+        //dd($context);
 
-        return $this->json($data, $status, $headers, $context);
+        // $encoders = [new JsonEncoder()];
+        // $normalizers = [new ObjectNormalizer()];
+        // $serializer = new Serializer($normalizers, $encoders);
+        // $jsonContent = $serializer->serialize($data, 'json', [
+        //     DateTimeNormalizer::FORMAT_KEY => 'Y-m-d H:i:s',
+        // ]);
+
+        //dd($jsonContent);
+        $response = $this->json($data, $status, $headers, $context);
+
+        //dump($response);
+        return $response;
     }
 }

@@ -30,3 +30,7 @@ services:
         tags: ['controller.service_arguments']
 
     Intervention\Image\ImageManager: ~
+
+    App\Serializer\Normalizer\ImagePostNormalizer:
+        calls:
+            - setNormalizer: ['@serializer.normalizer.object']
