@@ -3,8 +3,7 @@
 namespace App\Photo;
 
 use App\Entity\ImagePost;
-use League\Flysystem\AdapterInterface;
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemOperator;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -13,7 +12,7 @@ class PhotoFileManager
     private $filesystem;
     private $publicAssetBaseUrl;
 
-    public function __construct(FilesystemInterface $photoFilesystem, string $publicAssetBaseUrl)
+    public function __construct(FilesystemOperator $photoFilesystem, string $publicAssetBaseUrl)
     {
         $this->filesystem = $photoFilesystem;
         $this->publicAssetBaseUrl = $publicAssetBaseUrl;
@@ -33,7 +32,7 @@ class PhotoFileManager
             $newFilename,
             $stream,
             [
-                'visibility' => AdapterInterface::VISIBILITY_PUBLIC
+                'visibility' => 'public',
             ]
         );
 
@@ -68,6 +67,7 @@ class PhotoFileManager
 
     public function update(string $filename, string $updatedContents): void
     {
-        $this->filesystem->update($filename, $updatedContents);
+        $this->filesystem->write($filename, $updatedContents);
+
     }
 }
