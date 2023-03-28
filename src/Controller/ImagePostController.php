@@ -23,21 +23,25 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ImagePostController extends AbstractController
 {
-    /**
-     * @Route("/api/images", methods="GET")
-     */
+
+
+    public function __construct()
+    {
+        
+    }
+
+    #[Route('/api/images', methods:'GET')]
     public function list(ImagePostRepository $repository)
     {
         $posts = $repository->findBy([], ['createdAt' => 'DESC']);
-
-        return $this->toJson([
-            'items' => $posts
+        $json = $this->toJson([
+            'items' => $posts,
         ]);
+
+        return $json;
     }
 
-    /**
-     * @Route("/api/images", methods="POST")
-     */
+    #[Route('/api/images', methods:"POST")]
     public function create(Request $request, ValidatorInterface $validator, PhotoFileManager $photoManager, EntityManagerInterface $entityManager, MessageBusInterface $messageBus)
     {
         /** @var UploadedFile $imageFile */
@@ -67,13 +71,12 @@ class ImagePostController extends AbstractController
         ]);
 
         $messageBus->dispatch($envelope);
-
+        
         return $this->toJson($imagePost, 201);
     }
 
-    /**
-     * @Route("/api/images/{id}", methods="DELETE")
-     */
+
+    #[Route("/api/images/{id}", methods:"DELETE")]
     public function delete(ImagePost $imagePost, MessageBusInterface $messageBus)
     {
 
@@ -83,9 +86,8 @@ class ImagePostController extends AbstractController
         return new Response(null, 204);
     }
 
-    /**
-     * @Route("/api/images/{id}", methods="GET", name="get_image_post_item")
-     */
+
+    #[Route("/api/images/{id}", methods:"GET", name:"get_image_post_item")]
     public function getItem(ImagePost $imagePost)
     {
         return $this->toJson($imagePost);
@@ -97,7 +99,9 @@ class ImagePostController extends AbstractController
         if (!isset($context['groups'])) {
             $context['groups'] = ['image:output'];
         }
+        
+        $response = $this->json($data, $status, $headers, $context);
 
-        return $this->json($data, $status, $headers, $context);
+        return $response;
     }
 }
