@@ -9,9 +9,10 @@ use App\Photo\PhotoPonkaficator;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class AddPonkaToImageHandler implements MessageHandlerInterface, LoggerAwareInterface
+#[AsMessageHandler( fromTransport: 'async', priority: 10)]
+class AddPonkaToImageHandler implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
