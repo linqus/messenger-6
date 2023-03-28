@@ -24,7 +24,6 @@ class ImagePost
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['image:output'])]
      private $filename;
 
     /**

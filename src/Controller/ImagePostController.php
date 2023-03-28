@@ -16,15 +16,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
-use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class ImagePostController extends AbstractController
 {
@@ -39,12 +34,10 @@ class ImagePostController extends AbstractController
     public function list(ImagePostRepository $repository)
     {
         $posts = $repository->findBy([], ['createdAt' => 'DESC']);
-        //dd($posts);
-
         $json = $this->toJson([
             'items' => $posts,
         ]);
-        //dd($json);
+
         return $json;
     }
 
@@ -107,22 +100,8 @@ class ImagePostController extends AbstractController
             $context['groups'] = ['image:output'];
         }
         
-        // $context = [
-        //     'url' => 'custom_value',
-        // ];
-        //dd($context);
-
-        // $encoders = [new JsonEncoder()];
-        // $normalizers = [new ObjectNormalizer()];
-        // $serializer = new Serializer($normalizers, $encoders);
-        // $jsonContent = $serializer->serialize($data, 'json', [
-        //     DateTimeNormalizer::FORMAT_KEY => 'Y-m-d H:i:s',
-        // ]);
-
-        //dd($jsonContent);
         $response = $this->json($data, $status, $headers, $context);
 
-        //dump($response);
         return $response;
     }
 }
