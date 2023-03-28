@@ -1,6 +1,7 @@
 monolog:
-    channels:
+    channels: 
         - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+        - messenger_audit
 
 when@dev:
     monolog:
@@ -9,7 +10,13 @@ when@dev:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
-                channels: ["!event"]
+                channels: ["!event", "!messenger_audit"]
+
+            messenger_audit_handler:
+                type: stream
+                path: "%kernel.logs_dir%\\messenger.log"
+                level: debug
+                channels: ["messenger_audit"]
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration
             #firephp:
