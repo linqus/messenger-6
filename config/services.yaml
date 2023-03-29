@@ -30,6 +30,11 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    App\MessageHandler\Command\:
+        resource: '../src/MessageHandler/Command'
+        autoconfigure: false # needed if some classes have configuration attributes to prevent duplications
+        tags: [{ name: messenger.message_handler, bus: command.bus}]
+
     Intervention\Image\ImageManager: ~
 
     App\Serializer\Normalizer\ImagePostNormalizer:
