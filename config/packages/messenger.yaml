@@ -26,6 +26,19 @@ framework:
             'App\Message\AddPonkaToImage': async_high_priority
             'App\Message\DeletePhotoFile': async
 
+when@dev:
+    framework:
+        messenger:
+            transports:
+                # replace with your transport name here (e.g., my_transport: 'in-memory://')
+                # For more Messenger testing tools, see https://github.com/zenstruck/messenger-test
+                async: 
+                #    dsn: 'sync://'
+                async_high_priority: 
+                #    dsn: 'sync://'
+                failed: 
+                #    dsn: 'sync://'
+
 # when@test:
 #    framework:
 #        messenger:
