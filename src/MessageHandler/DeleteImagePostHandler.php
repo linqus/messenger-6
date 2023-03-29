@@ -3,9 +3,8 @@
 
 namespace App\MessageHandler;
 
-use App\Entity\ImagePost;
 use App\Message\DeleteImagePost;
-use App\Message\DeletePhotoFile;
+use App\Message\Event\ImagePostDeletedEvent;
 use App\Repository\ImagePostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -15,13 +14,13 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class DeleteImagePostHandler
 {
     private $entityManager;
-    private $messageBus;
+    private $eventBus;
     private $imagePostRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, ImagePostRepository $imagePostRepository, MessageBusInterface $messageBus)
+    public function __construct(EntityManagerInterface $entityManager, ImagePostRepository $imagePostRepository, MessageBusInterface $eventBus)
     {
         $this->entityManager = $entityManager;
-        $this->messageBus = $messageBus;
+        $this->eventBus = $eventBus;
         $this->imagePostRepository = $imagePostRepository;
     }
 
@@ -29,10 +28,16 @@ class DeleteImagePostHandler
     {
         $imagePostId = $deleteImagePost->getImagePostId();
         $imagePost = $this->imagePostRepository->find($imagePostId);
+
         $this->entityManager->remove($imagePost);
         $this->entityManager->flush();
 
-        $message = new DeletePhotoFile($imagePost->getFilename());
-        $this->messageBus->dispatch($message);
+        $event = new ImagePostDeletedEvent($imagePost->getFilename());
+
+        $this->eventBus->dispatch($event,[
+            
+        ]);
+        //$message = new DeletePhotoFile($imagePost->getFilename());
+        //$this->messageBus->dispatch($message);
     }
 }
