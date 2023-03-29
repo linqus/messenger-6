@@ -11,7 +11,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-#[AsMessageHandler( fromTransport: 'async', priority: 10)]
+#[AsMessageHandler()]
 class AddPonkaToImageHandler implements LoggerAwareInterface
 {
     use LoggerAwareTrait;

@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-#[AsMessageHandler( fromTransport: 'async', priority: 10)]
+#[AsMessageHandler()]
 class DeleteImagePostHandler
 {
     private $entityManager;
