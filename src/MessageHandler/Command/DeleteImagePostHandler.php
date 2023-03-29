@@ -1,16 +1,16 @@
 <?php
 
 
-namespace App\MessageHandler;
+namespace App\MessageHandler\Command;
 
-use App\Message\DeleteImagePost;
+use App\Message\Command\DeleteImagePost;
 use App\Message\Event\ImagePostDeletedEvent;
 use App\Repository\ImagePostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-#[AsMessageHandler()]
+#[AsMessageHandler(bus:'command.bus')]  # this attribute won't be used if disabling autoconfigure in services  
 class DeleteImagePostHandler
 {
     private $entityManager;
