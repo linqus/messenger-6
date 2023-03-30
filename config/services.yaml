@@ -35,6 +35,11 @@ services:
         autoconfigure: false # needed if some classes have configuration attributes to prevent duplications
         tags: [{ name: messenger.message_handler, bus: command.bus}]
 
+    App\MessageHandler\Query\:
+        resource: '../src/MessageHandler/Query'
+        autoconfigure: false # needed if some classes have configuration attributes to prevent duplications
+        tags: [{ name: messenger.message_handler, bus: query.bus}]
+
     Intervention\Image\ImageManager: ~
 
     App\Serializer\Normalizer\ImagePostNormalizer:
