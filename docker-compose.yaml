@@ -11,6 +11,12 @@ services:
             # See https://docs.docker.com/compose/compose-file/#ports for more information.
             - '3306'
 
+    rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+            - '15672'
+            - '5672'
+        
 ###> doctrine/doctrine-bundle ###
 #  database:
 #    image: postgres:${POSTGRES_VERSION:-15}-alpine
