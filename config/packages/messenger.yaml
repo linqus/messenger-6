@@ -20,6 +20,7 @@ framework:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
             async: 
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                serializer: messenger.transport.symfony_serializer
                 options:
                     exchange:
                         name: messages
@@ -30,6 +31,8 @@ framework:
                             binding_keys: [normal]
             async_high_priority:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                serializer: messenger.transport.symfony_serializer
+
                 options:
                 #    queue_name: high
                     exchange: 
