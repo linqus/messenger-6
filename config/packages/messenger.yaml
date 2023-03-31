@@ -23,9 +23,13 @@ framework:
             async_high_priority:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 options:
-                    queue_name: high
+                #    queue_name: high
+                    exchange: 
+                        name: messages_priority_high
+                    queues:
+                        mesages_high: ~
             failed: 
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                dsn: 'doctrine://default'
                 options:
                     queue_name: failed
             # sync: 'sync://'
