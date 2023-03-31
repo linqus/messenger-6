@@ -42,6 +42,21 @@ framework:
                     queues:
                         mesages_high:
                             binding_keys: [high]
+
+            external_messages:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                serializer: 'App\Messenger\ExternalJsonMessengerSerializer'
+                
+                options:
+                    exchange:
+                        name: messages
+                        type: direct
+                        default_publish_routing_key: from_external
+                    auto_setup: false
+                    queues:
+                        messages_from_external:
+                            binding_keys: [from_external]
+
             #failed: 
             #    dsn: 'doctrine://default'
             #    options:
@@ -52,6 +67,7 @@ framework:
             # Route your messages to the transports
             'App\Message\Command\AddPonkaToImage': async_high_priority
             'App\Message\Event\ImagePostDeletedEvent': async
+            'App\Message\Command\LogEmoji': external_messages
 
 when@dev:
     framework:
