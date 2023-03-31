@@ -14,24 +14,35 @@ framework:
             query.bus: ~
 
         # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
-        failure_transport: failed
+        #failure_transport: failed
 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
             async: 
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: messages
+                        type: direct
+                        default_publish_routing_key: normal
+                    queues:
+                        messages_normal:
+                            binding_keys: [normal]
             async_high_priority:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 options:
                 #    queue_name: high
                     exchange: 
-                        name: messages_priority_high
+                        name: messages
+                        type: direct
+                        default_publish_routing_key: high
                     queues:
-                        mesages_high: ~
-            failed: 
-                dsn: 'doctrine://default'
-                options:
-                    queue_name: failed
+                        mesages_high:
+                            binding_keys: [high]
+            #failed: 
+            #    dsn: 'doctrine://default'
+            #    options:
+            #        queue_name: failed
             # sync: 'sync://'
 
         routing:
@@ -49,7 +60,7 @@ when@dev:
                 #    dsn: 'sync://'
                 async_high_priority: 
                 #    dsn: 'sync://'
-                failed: 
+                #failed: 
                 #    dsn: 'sync://'
 
 when@test:
