@@ -3,8 +3,11 @@
 namespace App\Messenger;
 
 use App\Message\Command\LogEmoji;
+use GuzzleHttp\Psr7\Message;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
 use Symfony\Component\Messenger\Stamp\BusNameStamp;
+use Symfony\Component\Messenger\Stamp\MessageDecodingFailedStamp;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 
 class ExternalJsonMessengerSerializer implements SerializerInterface
@@ -17,9 +20,18 @@ class ExternalJsonMessengerSerializer implements SerializerInterface
 
         $data = json_decode($body,true);
 
+        if (null === $data) {
+            throw new MessageDecodingFailedException('Ivalid JSON');
+        }
+
+        if (!array_key_exists('emoji', $data)) {
+            throw new MessageDecodingFailedException('No expected "emoji" in JSON');
+        };
+
         $idx = $data['emoji'];
 
         $message = new LogEmoji($idx);
+
         $envelope = new Envelope($message);
         $envelope = $envelope->with(new BusNameStamp('command.bus'));
         return $envelope;
