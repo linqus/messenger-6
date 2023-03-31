@@ -4,6 +4,7 @@ namespace App\Messenger;
 
 use App\Message\Command\LogEmoji;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Stamp\BusNameStamp;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 
 class ExternalJsonMessengerSerializer implements SerializerInterface
@@ -19,7 +20,9 @@ class ExternalJsonMessengerSerializer implements SerializerInterface
         $idx = $data['emoji'];
 
         $message = new LogEmoji($idx);
-        return new Envelope($message);
+        $envelope = new Envelope($message);
+        $envelope = $envelope->with(new BusNameStamp('command.bus'));
+        return $envelope;
     }
 
     public function encode(Envelope $envelope): array
